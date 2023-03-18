@@ -1,65 +1,56 @@
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ArrayList;
+import java.util.Stack;
+
 
 class Solution {
     
     public static boolean isValid(String s) {
         Map<Character, Character> chars = new HashMap<>();
-        Map<Character, Integer> charAmount = new HashMap<>();
+        Stack<Character> stack = new Stack<>();
         chars.put('(', ')');
         chars.put('[', ']');
         chars.put('{', '}');
 
-        charAmount.put('(', 1);
-        charAmount.put('[', 1);
-        charAmount.put('{', 1);
-        charAmount.put(')', -1);
-        charAmount.put(']', -1);
-        charAmount.put('}', -1);
-
-        
-
         for (int i = 0; i < s.length(); i++) {
-
             char current = s.charAt(i);
-            char next;
-            try {
-                next = s.charAt(i + 1);
-            } catch (Exception e) {
-                System.out.println(e);
-                return false;
+            if(i == 0){
+                if(chars.containsKey(current)){
+                    stack.add(current);
+                }
+                else{return false;}
             }
+            else{
+                if(chars.containsKey(current)){
+                    stack.add(current);
+                }
+                else{
+                    char prev = ' ';
+                    try {
+                        
+                        prev = chars.get(stack.pop());
+                    } catch (Exception e) {
+                        return false;
+                    }
 
-
-
-            if(chars.get(current) != next){
-                int indexADD = 0;
-                char pointer = current;
-                int count = i;
-                while(pointer != chars.get(current)){
-                    count++;
-                    pointer = s.charAt(count);
-                    if(pointer != chars.get(current)){
-                        indexADD = indexADD + charAmount.get(pointer);
+                    if( prev != current){
+                        return false;
                     }
                 }
-                if(indexADD != 0 ){
-                    return false;
-                }
-                i--;
-
             }
-            i++;
-
         }
-        
+        if(stack.size() != 0){
+            return false;
+        }
         return true;
     }
     public static void main(String[] args) {
-        System.out.println(isValid("()[]{}"));
+        System.out.println(isValid("(){}}{"));
         System.out.println(isValid("()[]"));
         System.out.println(isValid("()[{}]"));
         System.out.println(isValid("({}[])"));
     }
 }   
+/*
+
+*/
